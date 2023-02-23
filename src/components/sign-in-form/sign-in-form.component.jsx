@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-import { createUserDocumentFromAuth, signInAuthUserwithEmailAndPassword, signInWithGooglePopup } from "../../utils/firebase/firebase.utils";
+import {
+    createUserDocumentFromAuth,
+    signInAuthUserwithEmailAndPassword,
+    signInWithGooglePopup
+} from "../../utils/firebase/firebase.utils";
+
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
@@ -13,29 +18,27 @@ const defaultFormFields = {
 
 const SignInForm = () => {
 
-    const [ formFields, setFormFields ] = useState(defaultFormFields);
+    const [formFields, setFormFields] = useState(defaultFormFields);
     const { email, password } = formFields;
 
     const resetFormFields = () => {
         setFormFields(defaultFormFields)
     }
 
-    const signInWithGoogle = async() => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+    const signInWithGoogle = async () => {
+        await signInWithGooglePopup();
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await signInAuthUserwithEmailAndPassword(email, password);
-            console.log(response);
-            
+            const { user } = await signInAuthUserwithEmailAndPassword(email, password);
+
             resetFormFields();
 
-        } catch(error) {
-            switch(error.code) {
+        } catch (error) {
+            switch (error.code) {
                 case 'auth/wrong-password':
                     alert('Incorrect Password for email');
                     break;
@@ -53,7 +56,7 @@ const SignInForm = () => {
 
         const { name, value } = event.target;
 
-        setFormFields({...formFields, [name]: value});
+        setFormFields({ ...formFields, [name]: value });
     }
 
     return (
@@ -61,9 +64,9 @@ const SignInForm = () => {
             <h2>Already have an account?</h2>
             <span> Sign in with email and password</span>
             <form onSubmit={handleSubmit}>
-                
-                <FormInput label="Email" type='email' required onChange={handleChange} name="email"value={email} />
-                
+
+                <FormInput label="Email" type='email' required onChange={handleChange} name="email" value={email} />
+
                 <FormInput label="Password" type='password' required onChange={handleChange} name="password" value={password} />
 
                 <div className="buttons-container">
